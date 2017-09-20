@@ -16,6 +16,9 @@ class SnpCrawlerPipeline(object):
 
 
 class MongodbPipeline(object):
+    """
+    If _id exists in item, use replace_one by _id, or use insert_one.
+    """
 
     def __init__(self, mongo_uri, mongo_db, collection):
         self.mongo_uri = mongo_uri
@@ -44,7 +47,7 @@ class MongodbPipeline(object):
         # del unused field
         if '_searchable' in data:
             del data['_searchable']
-        if item['_id']:
+        if '_id' in data:
             self.db[self.collection].replace_one({'_id': item['_id']}, data, upsert=True)
         else:
             self.db[self.collection].insert_one(data)
@@ -52,7 +55,10 @@ class MongodbPipeline(object):
 
 
 class ElasticsearchPipeline(object):
-
+    """
+    Get fields in _searchable of item, store by Elasticsearch api.
+    If _id exists in item, use _id as id, or use auto generated id.
+    """
     def __init__(self, host, index, type):
         self.host = host
         self.index = index
@@ -75,7 +81,7 @@ class ElasticsearchPipeline(object):
             for f in fields:
                 if f in item:
                     data[f] = item[f]
-            if data['_id']:
+            if '_id' in data:
                 fid = data['_id']
                 del data['_id']
                 res = requests.put('/'.join([self.host, self.index, self.type, fid]), json.dumps(data))

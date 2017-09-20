@@ -34,3 +34,23 @@ class EnsembleVariationItem(scrapy.Item):
     populations = scrapy.Field()
     population_genotypes = scrapy.Field()
     updated_at = scrapy.Field()
+
+
+class DbSnpItem(scrapy.Item):
+    _id = scrapy.Field()  # used for mongodb
+    _searchable = scrapy.Field()  # used for elasticsearch
+    name = scrapy.Field()
+    allele_origin = scrapy.Field()
+    global_maf = scrapy.Field()
+    clinical_significance = scrapy.Field()
+    gene = scrapy.Field()
+    acc = scrapy.Field()
+    chr = scrapy.Field()
+    validated = scrapy.Field()
+    create_build_id = scrapy.Field()
+    modified_build_id = scrapy.Field()
+    snp_class = scrapy.Field()
+    pos = scrapy.Field()
+    contigpos = scrapy.Field()
+    updated_at = scrapy.Field()
+

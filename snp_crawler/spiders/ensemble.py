@@ -41,8 +41,9 @@ class EnsembleSpider(scrapy.Spider):
             yield item
 
     def get_api_url(self):
-        query = self.settings['ENSEMBLE_QUERY'] if self.settings['ENSEMBLE_QUERY'] else []
+        query = self.settings['ENSEMBLE_QUERY'] if self.settings['ENSEMBLE_QUERY'] else {}
         if query:
+            query = ['%s=%s' % (k, v) for k, v in query.items()]
             url = self.api_host + '?' + '&'.join(query)
         else:
             url = self.api_host

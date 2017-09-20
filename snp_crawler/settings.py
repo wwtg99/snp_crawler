@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'snp_crawler.spiders'
 #USER_AGENT = 'snp_crawler (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -93,7 +93,10 @@ ITEM_PIPELINES = {
 
 # spider settings
 # ensemble
-ENSEMBLE_QUERY = ['genotypes=0', 'phenotypes=0', 'pops=0', 'population_genotypes=0']
+ENSEMBLE_QUERY = {'genotypes': '0', 'phenotypes': '0', 'pops': '0', 'population_genotypes': '0'}
+
+# dbsnp
+DBSNP_QUERY = {}
 
 # pipeline settings
 # mongodb
