@@ -101,10 +101,10 @@ DBSNP_QUERY = {}
 # pipeline settings
 # mongodb
 MONGO_URI = '192.168.0.21'
-MONGO_DATABASE = 'test'
+MONGO_DATABASE = 'testdb'
 # MONGO_COLLECTION = 'test'  # default spider name
 
 # elasticsearch
 ELASTICSEARCH_HOST = 'http://192.168.0.21:9200'
-ELASTICSEARCH_INDEX = 'test'
+ELASTICSEARCH_INDEX = 'testdb'
 # ELASTICSEARCH_TYPE = 'test'  # default spider name

@@ -3,9 +3,19 @@
     "ensemble": {
       "properties": {
         "name": {
-          "type": "text",
-          "index": "analyzed",
+          "type": "keyword",
+          "index": "not_analyzed",
           "include_in_all": true
+        },
+        "ancestral_allele": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "minor_allele": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
         },
         "synonyms": {
           "type": "text",
@@ -23,13 +33,18 @@
     "dbsnp": {
       "properties": {
         "name": {
-          "type": "text",
-          "index": "analyzed",
+          "type": "keyword",
+          "index": "not_analyzed",
           "include_in_all": true
         },
+        "allele_origin": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
         "clinical_significance": {
-          "type": "text",
-          "index": "analyzed",
+          "type": "keyword",
+          "index": "not_analyzed",
           "include_in_all": true
         },
         "gene": {
