@@ -4,7 +4,6 @@ from scrapy.http import Request
 from snp_crawler.items import DbSnpItem
 from snp_crawler.item_generators import GeneratorFactory
 import time
-import os
 
 
 class DbsnpSpider(scrapy.Spider):
@@ -13,13 +12,15 @@ class DbsnpSpider(scrapy.Spider):
     start_urls = []
     api_host = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
     headers = None
-    default_max_per_batch = 50
+    default_max_per_batch = 100
+    store_keys = ['ALLELE_ORIGIN', 'GLOBAL_MAF', 'CLINICAL_SIGNIFICANCE', 'GENE', 'ACC', 'CHR', 'VALIDATED',
+                  'CREATE_BUILD_ID', 'MODIFIED_BUILD_ID', 'SNP_CLASS', 'CONTIGPOS']
 
     def __init__(self, name=None, **kwargs):
         super().__init__(name, **kwargs)
         if 'batch_num' not in kwargs:
             kwargs['batch_num'] = DbsnpSpider.default_max_per_batch
-        self._generator = GeneratorFactory.get_generator(**kwargs)
+        self._generator = GeneratorFactory.get_generator(self, **kwargs)
 
     def start_requests(self):
         if self._generator is not None:
@@ -45,8 +46,6 @@ class DbsnpSpider(scrapy.Spider):
             yield self.parse_data_docset(data)
 
     def parse_data_docset(self, lines):
-        available_keys = ['ALLELE_ORIGIN', 'GLOBAL_MAF', 'CLINICAL_SIGNIFICANCE', 'GENE', 'ACC', 'CHR',
-                          'VALIDATED', 'CREATE_BUILD_ID', 'MODIFIED_BUILD_ID', 'SNP_CLASS', 'CONTIGPOS']
         if len(lines) <= 0:
             return None
         item = DbSnpItem()
@@ -61,7 +60,7 @@ class DbsnpSpider(scrapy.Spider):
                     item['name'] = item['_id']
                 elif key == 'CHROMOSOME BASE POSITION':
                     item['pos'] = kv[1]
-                elif key in available_keys:
+                elif key in self.store_keys:
                     item[key.lower()] = kv[1]
         if '_id' in item:
             return item

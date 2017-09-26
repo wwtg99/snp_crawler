@@ -5,7 +5,6 @@ import json
 from snp_crawler.items import EnsembleVariationItem
 from snp_crawler.item_generators import GeneratorFactory
 import time
-import os
 
 
 class EnsembleSpider(scrapy.Spider):
@@ -15,12 +14,15 @@ class EnsembleSpider(scrapy.Spider):
     api_host = 'http://grch37.rest.ensembl.org/variation/homo_sapiens'
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
     default_max_per_batch = 500
+    store_keys = ['name', 'source', 'mappings', 'MAF', 'ancestral_allele', 'minor_allele', 'ambiguity',
+                  'clinical_significance', 'var_class', 'synonyms', 'evidence', 'most_severe_consequence',
+                  'phenotypes', 'genotypes', 'populations', 'population_genotypes']
 
     def __init__(self, name=None, **kwargs):
         super().__init__(name, **kwargs)
         if 'batch_num' not in kwargs:
             kwargs['batch_num'] = EnsembleSpider.default_max_per_batch
-        self._generator = GeneratorFactory.get_generator(**kwargs)
+        self._generator = GeneratorFactory.get_generator(self, **kwargs)
 
     def start_requests(self):
         if self._generator is not None:
@@ -32,7 +34,8 @@ class EnsembleSpider(scrapy.Spider):
     def parse(self, response):
         js = json.loads(response.body_as_unicode())
         for rs in js:
-            item = EnsembleVariationItem(js[rs])
+            data = dict([(x, js[rs][x]) for x in self.store_keys if x in js[rs]])
+            item = EnsembleVariationItem(data)
             item['_id'] = rs
             item['updated_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
             item['_searchable'] = ['_id', 'name', 'ancestral_allele', 'minor_allele', 'synonyms', 'updated_at']
