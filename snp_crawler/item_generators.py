@@ -1,5 +1,6 @@
 import os
 from scrapy.exceptions import CloseSpider
+import glob
 
 
 class GeneratorFactory(object):
@@ -113,25 +114,23 @@ class FileGenerator(BaseGenerator):
 
     def generate(self):
         bnum = self.get_batch_num()
-        if not os.path.exists(self._filepath):
-            reason = 'File %s not exists!' % self._filepath
-            self._spider.logger.error(reason)
-            raise CloseSpider(reason=reason)
-        with open(self._filepath) as fh:
-            i = 0
-            ids = []
-            for line in fh:
-                line = self.parse_line(line)
-                if line is None:
-                    continue
-                ids.append(line)
-                i += 1
-                if i >= bnum:
+        for fpath in glob.iglob(self._filepath):
+            self._spider.logger.info('Read from file %s' % os.path.realpath(fpath))
+            with open(fpath) as fh:
+                i = 0
+                ids = []
+                for line in fh:
+                    line = self.parse_line(line)
+                    if line is None:
+                        continue
+                    ids.append(line)
+                    i += 1
+                    if i >= bnum:
+                        yield ids
+                        i = 0
+                        ids = []
+                if len(ids) > 0:
                     yield ids
-                    i = 0
-                    ids = []
-            if len(ids) > 0:
-                yield ids
 
     def parse_line(self, line):
         """
