@@ -50,7 +50,6 @@ class DbsnpSpider(scrapy.Spider):
             return None
         item = DbSnpItem()
         item['updated_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        item['_searchable'] = ['_id', 'name', 'gene', 'allele_origin', 'clinical_significance', 'updated_at']
         for line in lines:
             kv = line.split('=')
             if len(kv) == 2:
@@ -68,7 +67,7 @@ class DbsnpSpider(scrapy.Spider):
             return None
 
     def get_api_url(self, query):
-        q = self.settings['DBSNP_QUERY'] if self.settings['DBSNP_QUERY'] else {}
+        q = self.get_spider_conf('query')
         query = dict(query, **q)
         if query:
             qls = ['%s=%s' % (k, v) for k, v in query.items()]
@@ -76,3 +75,9 @@ class DbsnpSpider(scrapy.Spider):
         else:
             url = self.api_host
         return url
+
+    def get_spider_conf(self, field=None):
+        conf = self.settings['SPIDER_SETTINGS'][self.name] if self.settings['SPIDER_SETTINGS'][self.name] else {}
+        if field:
+            return conf[field] if field in conf else None
+        return conf

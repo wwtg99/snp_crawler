@@ -92,11 +92,16 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # spider settings
-# ensemble
-ENSEMBLE_QUERY = {'genotypes': '0', 'phenotypes': '0', 'pops': '0', 'population_genotypes': '0'}
-
-# dbsnp
-DBSNP_QUERY = {}
+SPIDER_SETTINGS = {
+    'ensemble': {
+        'query': {'genotypes': '0', 'phenotypes': '0', 'pops': '0', 'population_genotypes': '0'},
+        'elasticsearch_fields': ['_id', 'name', 'ancestral_allele', 'minor_allele', 'synonyms', 'mappings', 'updated_at']
+    },
+    'dbsnp': {
+        'query': {},
+        'elasticsearch_fields': ['_id', 'name', 'gene', 'allele_origin', 'clinical_significance', 'updated_at']
+    }
+}
 
 # pipeline settings
 # mongodb

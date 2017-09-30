@@ -38,14 +38,19 @@ class EnsembleSpider(scrapy.Spider):
             item = EnsembleVariationItem(data)
             item['_id'] = rs
             item['updated_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
-            item['_searchable'] = ['_id', 'name', 'ancestral_allele', 'minor_allele', 'synonyms', 'updated_at']
             yield item
 
     def get_api_url(self):
-        query = self.settings['ENSEMBLE_QUERY'] if self.settings['ENSEMBLE_QUERY'] else {}
+        query = self.get_spider_conf('query')
         if query:
             query = ['%s=%s' % (k, v) for k, v in query.items()]
             url = self.api_host + '?' + '&'.join(query)
         else:
             url = self.api_host
         return url
+
+    def get_spider_conf(self, field=None):
+        conf = self.settings['SPIDER_SETTINGS'][self.name] if self.settings['SPIDER_SETTINGS'][self.name] else {}
+        if field:
+            return conf[field] if field in conf else None
+        return conf

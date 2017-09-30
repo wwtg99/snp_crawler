@@ -1,6 +1,9 @@
 {
   "mappings": {
     "ensemble": {
+      "_all": {
+        "enabled": true
+      },
       "properties": {
         "name": {
           "type": "keyword",
@@ -18,9 +21,53 @@
           "include_in_all": false
         },
         "synonyms": {
-          "type": "text",
-          "index": "analyzed",
+          "type": "keyword",
+          "index": "not_analyzed",
           "include_in_all": true
+        },
+        "mappings": {
+          "properties": {
+            "allele_string": {
+              "type": "keyword",
+              "index": "no",
+              "include_in_all": false
+            },
+            "assembly_name": {
+              "type": "keyword",
+              "index": "no",
+              "include_in_all": false
+            },
+            "coord_system": {
+              "type": "keyword",
+              "index": "no",
+              "include_in_all": false
+            },
+            "start": {
+              "type": "long",
+              "index": "no",
+              "include_in_all": false
+            },
+            "end": {
+              "type": "long",
+              "index": "no",
+              "include_in_all": false
+            },
+            "location": {
+              "type": "keyword",
+              "index": "no",
+              "include_in_all": false
+            },
+            "seq_region_name": {
+              "type": "keyword",
+              "index": "no",
+              "include_in_all": false
+            },
+            "strand": {
+              "type": "long",
+              "index": "no",
+              "include_in_all": false
+            }
+          }
         },
         "updated_at": {
           "type": "date",
@@ -31,6 +78,9 @@
       }
     },
     "dbsnp": {
+      "_all": {
+        "enabled": true
+      },
       "properties": {
         "name": {
           "type": "keyword",

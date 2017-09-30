@@ -44,9 +44,6 @@ class MongodbPipeline(object):
         if not self.collection:
             self.collection = spider.name
         data = dict(item)
-        # del unused field
-        if '_searchable' in data:
-            del data['_searchable']
         if '_id' in data:
             self.db[self.collection].replace_one({'_id': item['_id']}, data, upsert=True)
         else:
@@ -75,8 +72,9 @@ class ElasticsearchPipeline(object):
     def process_item(self, item, spider):
         if not self.type:
             self.type = spider.name
-        if item['_searchable']:
-            fields = item['_searchable']
+        conf = spider.settings['SPIDER_SETTINGS'][spider.name] if spider.settings['SPIDER_SETTINGS'][spider.name] else {}
+        if conf['elasticsearch_fields']:
+            fields = conf['elasticsearch_fields']
             data = {}
             for f in fields:
                 if f in item:
