@@ -4,9 +4,10 @@ from scrapy.http import Request
 from snp_crawler.items import DbSnpItem
 from snp_crawler.item_generators import GeneratorFactory
 import time
+from snp_crawler.utils import Configurable
 
 
-class DbsnpSpider(scrapy.Spider):
+class DbsnpSpider(scrapy.Spider, Configurable):
     name = 'dbsnp'
     allowed_domains = ['eutils.ncbi.nlm.nih.gov']
     start_urls = []
@@ -65,19 +66,3 @@ class DbsnpSpider(scrapy.Spider):
             return item
         else:
             return None
-
-    def get_api_url(self, query):
-        q = self.get_spider_conf('query')
-        query = dict(query, **q)
-        if query:
-            qls = ['%s=%s' % (k, v) for k, v in query.items()]
-            url = self.api_host + '?' + '&'.join(qls)
-        else:
-            url = self.api_host
-        return url
-
-    def get_spider_conf(self, field=None):
-        conf = self.settings['SPIDER_SETTINGS'][self.name] if self.settings['SPIDER_SETTINGS'][self.name] else {}
-        if field:
-            return conf[field] if field in conf else None
-        return conf

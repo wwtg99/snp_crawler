@@ -5,9 +5,10 @@ import json
 from snp_crawler.items import EnsembleVariationItem
 from snp_crawler.item_generators import GeneratorFactory
 import time
+from snp_crawler.utils import Configurable
 
 
-class EnsembleSpider(scrapy.Spider):
+class EnsembleSpider(scrapy.Spider, Configurable):
     name = 'ensemble'
     allowed_domains = ['grch37.rest.ensembl.org']
     start_urls = []
@@ -28,6 +29,7 @@ class EnsembleSpider(scrapy.Spider):
         if self._generator is not None:
             for ids in self._generator.generate():
                 query = {'ids': ids}
+                self.logger.debug("Request for ids " + ','.join(ids))
                 yield Request(self.get_api_url(), method='POST', headers=self.headers, body=json.dumps(query), dont_filter=True)
         return None
 
@@ -39,18 +41,3 @@ class EnsembleSpider(scrapy.Spider):
             item['_id'] = rs
             item['updated_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
             yield item
-
-    def get_api_url(self):
-        query = self.get_spider_conf('query')
-        if query:
-            query = ['%s=%s' % (k, v) for k, v in query.items()]
-            url = self.api_host + '?' + '&'.join(query)
-        else:
-            url = self.api_host
-        return url
-
-    def get_spider_conf(self, field=None):
-        conf = self.settings['SPIDER_SETTINGS'][self.name] if self.settings['SPIDER_SETTINGS'][self.name] else {}
-        if field:
-            return conf[field] if field in conf else None
-        return conf

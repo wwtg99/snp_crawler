@@ -72,9 +72,8 @@ class ElasticsearchPipeline(object):
     def process_item(self, item, spider):
         if not self.type:
             self.type = spider.name
-        conf = spider.settings['SPIDER_SETTINGS'][spider.name] if spider.settings['SPIDER_SETTINGS'][spider.name] else {}
-        if conf['elasticsearch_fields']:
-            fields = conf['elasticsearch_fields']
+        fields = spider.get_spider_conf('elasticsearch_fields') if hasattr(spider, 'get_spider_conf') else {}
+        if fields:
             data = {}
             for f in fields:
                 if f in item:
