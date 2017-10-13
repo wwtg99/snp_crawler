@@ -67,7 +67,7 @@ ROBOTSTXT_OBEY = False
 ITEM_PIPELINES = {
 #    'snp_crawler.pipelines.SnpCrawlerPipeline': 300,
     'snp_crawler.pipelines.MongodbPipeline': 300,
-    'snp_crawler.pipelines.ElasticsearchPipeline': 400
+#     'snp_crawler.pipelines.ElasticsearchPipeline': 400
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -100,6 +100,10 @@ SPIDER_SETTINGS = {
     'dbsnp': {
         'query': {},
         'elasticsearch_fields': ['_id', 'name', 'gene', 'allele_origin', 'clinical_significance', 'updated_at']
+    },
+    'deafnessvdb': {
+        'query': {},
+        'elasticsearch_fields': ['_id', 'variation', 'gene', 'pathogenicity', 'dbsnp', 'updated_at']
     }
 }
 

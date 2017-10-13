@@ -1,0 +1,77 @@
+{
+  "_all": {
+    "enabled": true
+  },
+  "properties": {
+    "name": {
+      "type": "keyword",
+      "index": "not_analyzed",
+      "include_in_all": true
+    },
+    "ancestral_allele": {
+      "type": "keyword",
+      "index": "no",
+      "include_in_all": false
+    },
+    "minor_allele": {
+      "type": "keyword",
+      "index": "no",
+      "include_in_all": false
+    },
+    "synonyms": {
+      "type": "keyword",
+      "index": "not_analyzed",
+      "include_in_all": true
+    },
+    "mappings": {
+      "properties": {
+        "allele_string": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "assembly_name": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "coord_system": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "start": {
+          "type": "long",
+          "index": "no",
+          "include_in_all": false
+        },
+        "end": {
+          "type": "long",
+          "index": "no",
+          "include_in_all": false
+        },
+        "location": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "seq_region_name": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "strand": {
+          "type": "long",
+          "index": "no",
+          "include_in_all": false
+        }
+      }
+    },
+    "updated_at": {
+      "type": "date",
+      "format": "yyyy-MM-dd HH:mm:ss",
+      "index": "no",
+      "include_in_all": false
+    }
+  }
+}

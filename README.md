@@ -28,6 +28,7 @@ scrapy crawl ensemble -a vcf=../data/*.vcf
 # Supported spiders
 - Ensemble
 - dbSNP
+- Deafnessvdb
 
 # Supported data targets
 - MongoDB: for whole data
