@@ -27,9 +27,13 @@ class DeafnessvdbSpider(scrapy.Spider, Configurable):
             # get all genes list
             url = 'http://deafnessvariationdatabase.org/api?&type=genelist&format=json'
             res = requests.get(url)
+            total = 0
             for j in res.json():
                 if 'gene' in j:
                     self._genes.append(j['gene'])
+                if 'count' in j:
+                    total += int(j['count'])
+            self.logger.info('Total records: ' + str(total))
         # download from genes
         for gene in self._genes:
             yield Request(self.get_api_url({'type': 'gene', 'terms': gene, 'format': 'csv'}), dont_filter=True)
