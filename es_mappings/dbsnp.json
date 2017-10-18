@@ -1,33 +1,37 @@
 {
-  "_all": {
-    "enabled": true
-  },
-  "properties": {
-    "name": {
-      "type": "keyword",
-      "index": "not_analyzed",
-      "include_in_all": true
-    },
-    "allele_origin": {
-      "type": "keyword",
-      "index": "no",
-      "include_in_all": false
-    },
-    "clinical_significance": {
-      "type": "keyword",
-      "index": "not_analyzed",
-      "include_in_all": true
-    },
-    "gene": {
-      "type": "text",
-      "index": "analyzed",
-      "include_in_all": true
-    },
-    "updated_at": {
-      "type": "date",
-      "format": "yyyy-MM-dd HH:mm:ss",
-      "index": "no",
-      "include_in_all": false
+  "mappings": {
+    "dbsnp": {
+      "_all": {
+        "enabled": true
+      },
+      "properties": {
+        "name": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "allele_origin": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "clinical_significance": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "gene": {
+          "type": "text",
+          "index": "analyzed",
+          "include_in_all": true
+        },
+        "updated_at": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss",
+          "index": "no",
+          "include_in_all": false
+        }
+      }
     }
   }
 }
