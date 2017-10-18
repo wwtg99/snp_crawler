@@ -67,7 +67,7 @@ ROBOTSTXT_OBEY = False
 ITEM_PIPELINES = {
 #    'snp_crawler.pipelines.SnpCrawlerPipeline': 300,
     'snp_crawler.pipelines.MongodbPipeline': 300,
-#     'snp_crawler.pipelines.ElasticsearchPipeline': 400
+#    'snp_crawler.pipelines.ElasticsearchPipeline': 400
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -115,5 +115,6 @@ MONGO_DATABASE = 'testdb'
 
 # elasticsearch
 ELASTICSEARCH_HOST = 'http://192.168.0.21:9200'
-ELASTICSEARCH_INDEX = 'testdb'
+ELASTICSEARCH_INDEX = ''  # default spider name
+ELASTICSEARCH_INDEX_PREFIX = ''  # index prefix if ELASTICSEARCH_INDEX not provided
 # ELASTICSEARCH_TYPE = 'test'  # default spider name

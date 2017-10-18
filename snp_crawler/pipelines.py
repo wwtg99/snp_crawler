@@ -56,20 +56,24 @@ class ElasticsearchPipeline(object):
     Get fields in _searchable of item, store by Elasticsearch api.
     If _id exists in item, use _id as id, or use auto generated id.
     """
-    def __init__(self, host, index, type):
+    def __init__(self, host, index, type, prefix):
         self.host = host
         self.index = index
         self.type = type
+        self.prefix = prefix
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
             host=crawler.settings.get('ELASTICSEARCH_HOST'),
             index=crawler.settings.get('ELASTICSEARCH_INDEX'),
-            type=crawler.settings.get('ELASTICSEARCH_TYPE')
+            type=crawler.settings.get('ELASTICSEARCH_TYPE'),
+            prefix=crawler.settings.get('ELASTICSEARCH_INDEX_PREFIX')
         )
 
     def process_item(self, item, spider):
+        if not self.index:
+            self.index = self.prefix + spider.name if self.prefix else spider.name
         if not self.type:
             self.type = spider.name
         fields = spider.get_spider_conf('elasticsearch_fields') if hasattr(spider, 'get_spider_conf') else {}
