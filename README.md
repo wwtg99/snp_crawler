@@ -29,6 +29,7 @@ scrapy crawl ensemble -a vcf=../data/*.vcf
 - Ensemble
 - dbSNP
 - Deafnessvdb
+- Gwas_Catelog
 
 # Supported data targets
 - MongoDB: for whole data

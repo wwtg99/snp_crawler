@@ -17,15 +17,16 @@ class Configurable:
             url = self.api_host
         return url
 
-    def get_spider_conf(self, field=None):
+    def get_spider_conf(self, field=None, default=None):
         """
         Get spider configuration.
 
         :param field:
+        :param default: default value if not exists
         :return:
         :rtype: dict
         """
         conf = self.settings['SPIDER_SETTINGS'][self.name] if self.name in self.settings['SPIDER_SETTINGS'] and self.settings['SPIDER_SETTINGS'][self.name] else {}
         if field:
-            return conf[field] if field in conf else None
+            return conf[field] if field in conf else default
         return conf

@@ -1,0 +1,101 @@
+{
+  "mappings": {
+    "ensemble": {
+      "_all": {
+        "enabled": true
+      },
+      "properties": {
+        "pmid": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "study": {
+          "type": "text",
+          "index": "analyzed",
+          "include_in_all": true
+        },
+        "trait": {
+          "type": "text",
+          "index": "analyzed",
+          "include_in_all": true
+        },
+        "region": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "chr": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "pos": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "reported_gene": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "mapped_gene": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "snp_risk": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "snp": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "merged": {
+          "type": "integer",
+          "index": "no",
+          "include_in_all": false
+        },
+        "snp_current": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        },
+        "risk_freq": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "pvalue": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "or_beta": {
+          "type": "float",
+          "index": "no",
+          "include_in_all": false
+        },
+        "ci95": {
+          "type": "keyword",
+          "index": "no",
+          "include_in_all": false
+        },
+        "mapped_trait": {
+          "type": "text",
+          "index": "analyzed",
+          "include_in_all": true
+        },
+        "study_accession": {
+          "type": "keyword",
+          "index": "not_analyzed",
+          "include_in_all": true
+        }
+      }
+    }
+  }
+}

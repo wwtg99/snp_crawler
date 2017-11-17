@@ -8,11 +8,9 @@ import pymongo
 import requests
 import json
 import logging
-
-
-class SnpCrawlerPipeline(object):
-    def process_item(self, item, spider):
-        return item
+from elasticsearch import Elasticsearch
+from elasticsearch import TransportError
+from scrapy.exceptions import DropItem
 
 
 class MongodbPipeline(object):
@@ -47,7 +45,10 @@ class MongodbPipeline(object):
         if '_id' in data:
             self.db[self.collection].replace_one({'_id': item['_id']}, data, upsert=True)
         else:
-            self.db[self.collection].insert_one(data)
+            res = self.db[self.collection].insert_one(data)
+            # add auto id
+            if res and res.inserted_id:
+                item['_id'] = str(res.inserted_id)
         return item
 
 
@@ -56,16 +57,17 @@ class ElasticsearchPipeline(object):
     Get fields in _searchable of item, store by Elasticsearch api.
     If _id exists in item, use _id as id, or use auto generated id.
     """
-    def __init__(self, host, index, type, prefix):
-        self.host = host
+    def __init__(self, hosts, index, type, prefix):
+        self.hosts = hosts
         self.index = index
         self.type = type
         self.prefix = prefix
+        self.elasticsearch = Elasticsearch(hosts=hosts)
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            host=crawler.settings.get('ELASTICSEARCH_HOST'),
+            hosts=crawler.settings.get('ELASTICSEARCH_HOSTS'),
             index=crawler.settings.get('ELASTICSEARCH_INDEX'),
             type=crawler.settings.get('ELASTICSEARCH_TYPE'),
             prefix=crawler.settings.get('ELASTICSEARCH_INDEX_PREFIX')
@@ -78,16 +80,17 @@ class ElasticsearchPipeline(object):
             self.type = spider.name
         fields = spider.get_spider_conf('elasticsearch_fields') if hasattr(spider, 'get_spider_conf') else {}
         if fields:
-            data = {}
-            for f in fields:
-                if f in item:
-                    data[f] = item[f]
-            if '_id' in data:
-                fid = data['_id']
-                del data['_id']
-                res = requests.put('/'.join([self.host, self.index, self.type, fid]), json.dumps(data))
-            else:
-                res = requests.post('/'.join([self.host, self.index, self.type]), json.dumps(data))
-            if res.status_code >= 400:
-                logging.error('Store Elasticsearch failed for %s, return message %s' % (json.dumps(data), res.text))
+            data = dict([(f, item[f]) for f in fields if f in item])
+            try:
+                if '_id' in data:
+                    fid = data['_id']
+                    del data['_id']
+                    res = self.elasticsearch.index(index=self.index, doc_type=self.type, id=fid, body=data)
+                else:
+                    res = self.elasticsearch.index(index=self.index, doc_type=self.type, body=data)
+                    # add auto id
+                    if res and '_id' in res:
+                        item['_id'] = res['_id']
+            except TransportError as err:
+                raise DropItem('Elasticsearch Error ' + json.dumps(err.info))
         return item

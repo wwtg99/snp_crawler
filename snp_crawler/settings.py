@@ -65,9 +65,8 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-#    'snp_crawler.pipelines.SnpCrawlerPipeline': 300,
     'snp_crawler.pipelines.MongodbPipeline': 300,
-#    'snp_crawler.pipelines.ElasticsearchPipeline': 400
+    'snp_crawler.pipelines.ElasticsearchPipeline': 400
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -92,6 +91,7 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # spider settings
+# elasticsearch_fields is used for ElasticsearchPipeline to index
 SPIDER_SETTINGS = {
     'ensemble': {
         'query': {'genotypes': '0', 'phenotypes': '0', 'pops': '0', 'population_genotypes': '0'},
@@ -104,6 +104,17 @@ SPIDER_SETTINGS = {
     'deafnessvdb': {
         'query': {},
         'elasticsearch_fields': ['_id', 'variation', 'gene', 'pathogenicity', 'dbsnp', 'updated_at']
+    },
+    'gwas_catelog': {
+        'header': ['added_date', 'pmid', 'first_author', 'pub_date', 'journal', 'link', 'study', 'trait',
+                   'initial_sample', 'replica_sample', 'region', 'chr', 'pos', 'reported_gene', 'mapped_gene',
+                   'upstream_gene', 'downstream_gene', 'gene_ids', 'upstream_gene_dis', 'downstream_gene_dis',
+                   'snp_risk', 'snp', 'merged', 'snp_current', 'context', 'intergenic', 'risk_freq', 'pvalue',
+                   'pvalue_mlog', 'pvalue_text', 'or_beta', 'ci95', 'platform', 'cnv', 'mapped_trait',
+                   'mapped_trait_uri', 'study_accession'],
+        'elasticsearch_fields': ['_id', 'pmid', 'study', 'trait', 'region', 'chr', 'pos', 'reported_gene',
+                                 'mapped_gene', 'snp_risk', 'snp', 'merged', 'snp_current', 'risk_freq', 'pvalue',
+                                 'or_beta', 'ci95', 'mapped_trait', 'study_accession']
     }
 }
 
@@ -114,7 +125,7 @@ MONGO_DATABASE = 'testdb'
 # MONGO_COLLECTION = 'test'  # default spider name
 
 # elasticsearch
-ELASTICSEARCH_HOST = 'http://192.168.0.21:9200'
+ELASTICSEARCH_HOSTS = ['192.168.0.21:9200']
 ELASTICSEARCH_INDEX = ''  # default spider name
 ELASTICSEARCH_INDEX_PREFIX = ''  # index prefix if ELASTICSEARCH_INDEX not provided
 # ELASTICSEARCH_TYPE = 'test'  # default spider name
